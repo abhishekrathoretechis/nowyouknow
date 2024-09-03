@@ -8,8 +8,10 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import Headers from '../components/Headers';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const Fetch = () => {
+const Fetch = ({navigation}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -57,6 +59,12 @@ const Fetch = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.main}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={25} />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>Product List</Text>
+      </View>
       <FlatList
         data={data}
         keyExtractor={item => item.id.toString()}
@@ -117,6 +125,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#87CEFA',
     marginTop: 5,
+  },
+  main: {
+    width: '70%',
+    height: 40,
+    marginBottom: 40,
+    // backgroundColor: 'blue',
+    flexDirection: 'row',
+    alignContent: 'center',
+    // justifyContent: 'center',
+    gap: 100,
+  },
+  headerText: {
+    // textAlign: 'center',
+    color: 'red',
+    fontSize: 25,
+    fontWeight: '500',
   },
 });
 

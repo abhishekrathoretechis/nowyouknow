@@ -11,8 +11,9 @@ import {
   Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const ToDoList = () => {
+const ToDoList = ({navigation}) => {
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
@@ -129,6 +130,12 @@ const ToDoList = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.main}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={25} />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>To Do List</Text>
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -316,6 +323,22 @@ const styles = StyleSheet.create({
   modalButtonText: {
     color: '#ffffff',
     fontWeight: 'bold',
+  },
+  main: {
+    width: '70%',
+    height: 40,
+    marginBottom: 40,
+    // backgroundColor: 'blue',
+    flexDirection: 'row',
+    alignContent: 'center',
+    // justifyContent: 'center',
+    gap: 80,
+  },
+  headerText: {
+    // textAlign: 'center',
+    color: 'red',
+    fontSize: 25,
+    fontWeight: '500',
   },
 });
 

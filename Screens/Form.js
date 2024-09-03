@@ -58,42 +58,55 @@ const Form = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-        placeholderTextColor="grey"
-      />
-      {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+      <View style={styles.main}>
+        <Text style={styles.headerText}>Form Submission</Text>
+      </View>
+      <View style={styles.form}>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+          placeholderTextColor="grey"
+        />
+        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        placeholderTextColor="grey"
-      />
-      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          placeholderTextColor="grey"
+        />
+        {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        placeholderTextColor="grey"
-      />
-      {errors.password && (
-        <Text style={styles.errorText}>{errors.password}</Text>
-      )}
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          placeholderTextColor="grey"
+        />
+        {errors.password && (
+          <Text style={styles.errorText}>{errors.password}</Text>
+        )}
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.fetchButton}
+          onPress={() => navigation.navigate('Fetch')}>
+          <Text style={styles.buttonText}>Fetch List</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.toButton}
+          onPress={() => navigation.navigate('ToDoList')}>
+          <Text style={styles.buttonText}>To Do List</Text>
+        </TouchableOpacity>
+      </View>
       <CustomModal
         visible={modalVisible}
         title="Confirm Action"
@@ -109,7 +122,7 @@ const Form = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     padding: 25,
     backgroundColor: '#f0f8ff', // Light blue background
   },
@@ -127,16 +140,45 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#87CEFA', // Light blue background for button
+    backgroundColor: '#87CEFA',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 35,
   },
+  fetchButton: {
+    backgroundColor: 'orange',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 65,
+    width: '30%',
+  },
+  toButton: {
+    backgroundColor: 'orange', // Light blue background for button
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+    width: '30%',
+  },
   buttonText: {
     color: '#ffffff', // White text color
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  main: {
+    width: '100%',
+    height: 40,
+  },
+  headerText: {
+    textAlign: 'center',
+    color: 'red',
+    fontSize: 25,
+    fontWeight: '500',
+  },
+  form: {
+    marginTop: 100,
   },
 });
 
