@@ -1,32 +1,27 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import Form from './Screens/Form';
-import Fetch from './Screens/Fetch';
-import ToDoList from './Screens/ToDoList';
+
+import IntroSliderScreen from './Screens/IntroSliderScreen/IntroSliderScreen';
+import MyBottomTabNavigator from './MyBottomTabNavigator';
+import LoginScreen from './Screens/LoginScreen/LoginScreen';
 
 const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-    <Stack.Navigator initialRouteName="Form">
-      {/* <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{headerShown: false}}
-      /> */}
-
+    <Stack.Navigator initialRouteName="IntroSliderScreen">
       <Stack.Screen
-        name="Form"
-        component={Form}
+        name="IntroSliderScreen"
+        component={IntroSliderScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Fetch"
-        component={Fetch}
+        name="MyBottomTabNavigator"
+        component={MyBottomTabNavigator}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="ToDoList"
-        component={ToDoList}
+        name="LoginScreen"
+        component={LoginScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
