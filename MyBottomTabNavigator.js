@@ -78,37 +78,6 @@ function MyBottomTabNavigator(props) {
       />
 
       <Tab.Screen
-        initialParams="SearchScreen"
-        name="SearchScreen"
-        component={SearchScreen}
-        listeners={({navigation, route}) => ({
-          tabPress: e => {
-            e.preventDefault();
-
-            props.navigation.navigate('SearchScreen', {screen: 'SearchScreen'});
-          },
-        })}
-        options={({route}) => ({
-          tabBarLabel: 'SearchScreen',
-          lazy: false,
-          headerShown: false,
-
-          tabBarShowLabel: false,
-
-          tabBarIcon: ({color, size, focused}) => {
-            return focused ? (
-              <Image
-                source={require('./assets/Images/Search.png')}
-                tintColor={'#F5BE00'}
-              />
-            ) : (
-              <Image source={require('./assets/Images/Search.png')} />
-            );
-          },
-        })}
-      />
-
-      <Tab.Screen
         initialParams="AddScreen"
         name="AddScreen"
         component={AddScreen}
@@ -137,37 +106,6 @@ function MyBottomTabNavigator(props) {
             );
           },
         }}
-      />
-
-      <Tab.Screen
-        initialParams="MagScreen"
-        name="MagScreen"
-        component={MagScreen}
-        listeners={({navigation, route}) => ({
-          tabPress: e => {
-            e.preventDefault();
-
-            props.navigation.navigate('MagScreen', {screen: 'MagScreen'});
-          },
-        })}
-        options={({route}) => ({
-          tabBarLabel: 'MagScreen',
-          lazy: false,
-          headerShown: false,
-
-          tabBarShowLabel: false,
-
-          tabBarIcon: ({color, size, focused}) => {
-            return focused ? (
-              <Image
-                source={require('./assets/Images/Mag.png')}
-                tintColor={'#F5BE00'}
-              />
-            ) : (
-              <Image source={require('./assets/Images/Mag.png')} />
-            );
-          },
-        })}
       />
 
       <Tab.Screen

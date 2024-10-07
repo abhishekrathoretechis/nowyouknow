@@ -33,9 +33,23 @@ const LoginScreen = () => {
     <ScrollView style={styles.mainContainer}>
       <Headers />
       <View style={{alignSelf: 'center'}}>
-        <Image source={require('../../assets/Images/ScaleUp.png')} />
+        <Image source={require('../../assets/Images/logo.png')} />
       </View>
-      <View
+      <TouchableOpacity
+        style={{
+          width: '90%',
+          backgroundColor: '#043142',
+          paddingVertical: 8,
+          alignSelf: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 20,
+          marginTop: responsiveScreenHeight(20),
+        }}
+        onPress={() => navigation.navigate('MyBottomTabNavigator')}>
+        <Text style={styles.loginText}>Lets get started</Text>
+      </TouchableOpacity>
+      {/* <View
         style={{
           marginTop: responsiveScreenHeight(2),
           paddingHorizontal: responsiveScreenWidth(5),
@@ -44,7 +58,7 @@ const LoginScreen = () => {
         <Text style={styles.subHeading}>
           Unlock Focused, Distraction-free Learning Login now
         </Text>
-      </View>
+      </View> */}
       <View
         style={{
           flexDirection: 'row',
@@ -53,7 +67,7 @@ const LoginScreen = () => {
           paddingHorizontal: responsiveScreenWidth(5),
           marginTop: responsiveScreenHeight(2),
         }}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[
             styles.button,
             selected === 'username' && styles.selectedButton, // Apply selected styles if 'username' is selected
@@ -68,10 +82,10 @@ const LoginScreen = () => {
             ]}>
             Username
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Mobile Number Button */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[
             styles.button,
             selected === 'mobile' && styles.selectedButton, // Apply selected styles if 'mobile' is selected
@@ -84,11 +98,11 @@ const LoginScreen = () => {
             ]}>
             Mobile No
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {selected === 'username' ? (
         <View>
-          <View style={styles.inputContainer}>
+          {/* <View style={styles.inputContainer}>
             <TextInput
               placeholder="Username/Email"
               placeholderTextColor={'#999999'}
@@ -101,9 +115,9 @@ const LoginScreen = () => {
                 paddingVertical: 10,
               }}
             />
-          </View>
+          </View> */}
           <View style={styles.inputContainerPassword}>
-            <TextInput
+            {/* <TextInput
               placeholder="Password"
               placeholderTextColor={'#999999'}
               style={{
@@ -114,8 +128,8 @@ const LoginScreen = () => {
                 paddingHorizontal: 20,
                 paddingVertical: 10,
               }}
-            />
-            <TouchableOpacity
+            /> */}
+            {/* <TouchableOpacity
               onPress={() => setPasswordVisible(!passwordVisible)}
               style={{marginRight: 20}}>
               {passwordVisible ? (
@@ -123,9 +137,9 @@ const LoginScreen = () => {
               ) : (
                 <EyeOff name="eye-off" size={24} color="#999999" />
               )}
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -152,22 +166,9 @@ const LoginScreen = () => {
                 Forgot Password?
               </Text>
             </View>
-          </View>
-          <TouchableOpacity
-            style={{
-              width: '90%',
-              backgroundColor: '#043142',
-              paddingVertical: 8,
-              alignSelf: 'center',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 20,
-              marginTop: responsiveScreenHeight(5),
-            }}
-            onPress={() => navigation.navigate('MyBottomTabNavigator')}>
-            <Text style={styles.loginText}>Login</Text>
-          </TouchableOpacity>
-          <Text
+          </View> */}
+
+          {/* <Text
             style={[
               styles.rememberText,
               {
@@ -177,8 +178,8 @@ const LoginScreen = () => {
               },
             ]}>
             Or continue with
-          </Text>
-          <View
+          </Text> */}
+          {/* <View
             style={{
               flexDirection: 'row',
               width: '90%',
@@ -229,7 +230,7 @@ const LoginScreen = () => {
                 Apple
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       ) : (
         <View>

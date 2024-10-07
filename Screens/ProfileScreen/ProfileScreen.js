@@ -1,498 +1,166 @@
+import React, {useContext} from 'react';
 import {
-  StyleSheet,
-  Text,
   View,
+  Text,
   Image,
+  StyleSheet,
+  Dimensions,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import {PostsContext} from '../../PostsContext'; // Import the context
 import Headers from '../../components/Headers';
 import {
-  responsiveHeight,
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 
-const ProfileScreen = () => {
-  const [Leaderboard, setLeaderBoard] = useState('today');
+const {width: screenWidth} = Dimensions.get('window');
+
+const ProfileScreen = ({navigation}) => {
+  const {posts, user} = useContext(PostsContext);
+
+  // Filter only posts that have the isNew property set to true
+  const newPosts = posts.filter(post => post.isNew);
+
   return (
-    <View style={styles.mainContainer}>
-      <Headers quiz quizText={'Leaderboard'} />
+    <View style={styles.container}>
+      <Headers quiz quizText={'Profile Screen'} />
+      <View style={styles.profileInfoContainer}>
+        <Image source={user?.profilePic} style={styles.profileImage} />
+        <View style={styles.userInfo}>
+          <Text style={styles.username}>{user?.userName}</Text>
+
+          <Text style={styles.bio}>{user?.bio}</Text>
+        </View>
+      </View>
+      <TouchableOpacity
+        style={{
+          width: '40%',
+          backgroundColor: '#043142',
+          paddingVertical: 8,
+          alignSelf: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 20,
+          marginTop: responsiveScreenHeight(1),
+        }}
+        onPress={() => navigation.navigate('EditProfileScreen')}>
+        <Text style={styles.loginText}>Edit Profile</Text>
+      </TouchableOpacity>
+
+      {/* Stats Section */}
+      <View style={styles.statsContainer}>
+        <View style={styles.statBox}>
+          <Text style={styles.statNumber}>{newPosts.length}</Text>
+          <Text style={styles.statLabel}>New Posts</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statNumber}>1.2K</Text>
+          <Text style={styles.statLabel}>Followers</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statNumber}>345</Text>
+          <Text style={styles.statLabel}>Following</Text>
+        </View>
+      </View>
       <View
         style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          paddingHorizontal: responsiveScreenWidth(5),
-        }}>
-        <TouchableOpacity
-          style={{
-            backgroundColor: Leaderboard === 'today' ? '#043142' : 'white',
+          height: responsiveScreenHeight(0.12),
+          width: '100%',
+          backgroundColor: 'grey',
+        }}></View>
 
-            paddingVertical: 10,
-            paddingHorizontal: 30,
-            borderRadius: 10,
-          }}
-          onPress={() => setLeaderBoard('today')}>
-          <Text
-            style={{
-              color: Leaderboard === 'today' ? 'white' : '#043142',
-              fontFamily: 'Poppins-Bold',
-            }}>
-            Today
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            backgroundColor: Leaderboard === 'week' ? '#043142' : 'white',
-
-            paddingVertical: 10,
-            paddingHorizontal: 30,
-            borderRadius: 10,
-          }}
-          onPress={() => setLeaderBoard('week')}>
-          <Text
-            style={{
-              color: Leaderboard === 'week' ? 'white' : '#043142',
-              fontFamily: 'Poppins-Bold',
-            }}>
-            Weekly
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            backgroundColor: Leaderboard === 'all' ? '#043142' : 'white',
-
-            paddingVertical: 10,
-            paddingHorizontal: 30,
-            borderRadius: 10,
-          }}
-          onPress={() => setLeaderBoard('all')}>
-          <Text
-            style={{
-              color: Leaderboard === 'all' ? 'white' : '#043142',
-              fontFamily: 'Poppins-Bold',
-            }}>
-            All Time
-          </Text>
-        </TouchableOpacity>
+      {/* New Posts Grid using mapping */}
+      <View
+        style={[
+          styles.postsGrid,
+          newPosts?.length !== 1 ? {justifyContent: 'space-between'} : {},
+        ]}>
+        {newPosts.map(item => (
+          <View key={item.id} style={styles.postContainer}>
+            <Image
+              source={{uri: item.postImages[0].uri}} // Display the first image of the post
+              style={styles.postImage}
+            />
+          </View>
+        ))}
       </View>
-      <ScrollView>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'flex-end',
-            alignSelf: 'center',
-            marginTop: responsiveScreenHeight(4),
-          }}>
-          <View style={{gap: 10, alignItems: 'center'}}>
-            <Image source={require('../../assets/Images/p7.png')} />
-            <Image source={require('../../assets/Images/r1.png')} />
-          </View>
-          <View style={{gap: 10, alignItems: 'center'}}>
-            <Image source={require('../../assets/Images/p2.png')} />
-            <Image source={require('../../assets/Images/r2.png')} />
-          </View>
-          <View style={{gap: 10, alignItems: 'center'}}>
-            <Image source={require('../../assets/Images/p6.png')} />
-            <Image source={require('../../assets/Images/r3.png')} />
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: responsiveScreenWidth(8),
-            marginTop: responsiveScreenHeight(2),
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
-            <Text
-              style={{
-                color: '#F5BE00',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 20,
-              }}>
-              4
-            </Text>
-            <Image source={require('../../assets/Images/p8.png')} />
-            <View>
-              <Text
-                style={{
-                  color: '#043142',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 20,
-                }}>
-                Name
-              </Text>
-              <Text
-                style={{
-                  color: '#999999',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 16,
-                }}>
-                Designation
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: '#043142',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 20,
-              }}>
-              Points
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#E9E9E9',
-            width: '100%',
-            height: responsiveScreenHeight(0.2),
-            marginTop: responsiveScreenHeight(1),
-          }}></View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: responsiveScreenWidth(8),
-            marginTop: responsiveScreenHeight(2),
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
-            <Text
-              style={{
-                color: '#F5BE00',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 20,
-              }}>
-              4
-            </Text>
-            <Image source={require('../../assets/Images/p8.png')} />
-            <View>
-              <Text
-                style={{
-                  color: '#043142',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 20,
-                }}>
-                Name
-              </Text>
-              <Text
-                style={{
-                  color: '#999999',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 16,
-                }}>
-                Designation
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: '#043142',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 20,
-              }}>
-              Points
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#E9E9E9',
-            width: '100%',
-            height: responsiveScreenHeight(0.2),
-            marginTop: responsiveScreenHeight(1),
-          }}></View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: responsiveScreenWidth(8),
-            marginTop: responsiveScreenHeight(2),
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
-            <Text
-              style={{
-                color: '#F5BE00',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 20,
-              }}>
-              4
-            </Text>
-            <Image source={require('../../assets/Images/p8.png')} />
-            <View>
-              <Text
-                style={{
-                  color: '#043142',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 20,
-                }}>
-                Name
-              </Text>
-              <Text
-                style={{
-                  color: '#999999',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 16,
-                }}>
-                Designation
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: '#043142',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 20,
-              }}>
-              Points
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#E9E9E9',
-            width: '100%',
-            height: responsiveScreenHeight(0.2),
-            marginTop: responsiveScreenHeight(1),
-          }}></View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: responsiveScreenWidth(8),
-            marginTop: responsiveScreenHeight(2),
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
-            <Text
-              style={{
-                color: '#F5BE00',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 20,
-              }}>
-              4
-            </Text>
-            <Image source={require('../../assets/Images/p8.png')} />
-            <View>
-              <Text
-                style={{
-                  color: '#043142',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 20,
-                }}>
-                Name
-              </Text>
-              <Text
-                style={{
-                  color: '#999999',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 16,
-                }}>
-                Designation
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: '#043142',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 20,
-              }}>
-              Points
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#E9E9E9',
-            width: '100%',
-            height: responsiveScreenHeight(0.2),
-            marginTop: responsiveScreenHeight(1),
-          }}></View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: responsiveScreenWidth(8),
-            marginTop: responsiveScreenHeight(2),
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
-            <Text
-              style={{
-                color: '#F5BE00',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 20,
-              }}>
-              4
-            </Text>
-            <Image source={require('../../assets/Images/p8.png')} />
-            <View>
-              <Text
-                style={{
-                  color: '#043142',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 20,
-                }}>
-                Name
-              </Text>
-              <Text
-                style={{
-                  color: '#999999',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 16,
-                }}>
-                Designation
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: '#043142',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 20,
-              }}>
-              Points
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#E9E9E9',
-            width: '100%',
-            height: responsiveScreenHeight(0.2),
-            marginTop: responsiveScreenHeight(1),
-          }}></View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: responsiveScreenWidth(8),
-            marginTop: responsiveScreenHeight(2),
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
-            <Text
-              style={{
-                color: '#F5BE00',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 20,
-              }}>
-              4
-            </Text>
-            <Image source={require('../../assets/Images/p8.png')} />
-            <View>
-              <Text
-                style={{
-                  color: '#043142',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 20,
-                }}>
-                Name
-              </Text>
-              <Text
-                style={{
-                  color: '#999999',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 16,
-                }}>
-                Designation
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: '#043142',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 20,
-              }}>
-              Points
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#E9E9E9',
-            width: '100%',
-            height: responsiveScreenHeight(0.2),
-            marginTop: responsiveScreenHeight(1),
-          }}></View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: responsiveScreenWidth(8),
-            marginTop: responsiveScreenHeight(2),
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
-            <Text
-              style={{
-                color: '#F5BE00',
-                fontFamily: 'Poppins-Medium',
-                fontSize: 20,
-              }}>
-              4
-            </Text>
-            <Image source={require('../../assets/Images/p8.png')} />
-            <View>
-              <Text
-                style={{
-                  color: '#043142',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 20,
-                }}>
-                Name
-              </Text>
-              <Text
-                style={{
-                  color: '#999999',
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 16,
-                }}>
-                Designation
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: '#043142',
-                fontFamily: 'Poppins-Bold',
-                fontSize: 20,
-              }}>
-              Points
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#E9E9E9',
-            width: '100%',
-            height: responsiveScreenHeight(0.2),
-            marginTop: responsiveScreenHeight(1),
-          }}></View>
-      </ScrollView>
     </View>
   );
 };
 
-export default ProfileScreen;
-
 const styles = StyleSheet.create({
-  mainContainer: {
+  container: {
     flex: 1,
     backgroundColor: 'white',
   },
+  profileInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: responsiveScreenWidth(6),
+    marginTop: responsiveScreenHeight(3),
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    resizeMode: 'cover',
+  },
+  userInfo: {
+    marginLeft: 20,
+  },
+  username: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#043142',
+    fontFamily: 'Poppins-Bold',
+  },
+  bio: {
+    fontSize: 16,
+    color: '#043142',
+    fontFamily: 'Poppins-Medium',
+    marginTop: 5,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: responsiveScreenHeight(2),
+  },
+  statBox: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#043142',
+    fontFamily: 'Poppins-Medium',
+  },
+  statLabel: {
+    fontSize: 14,
+    color: '#043142',
+    fontFamily: 'Poppins-Regular',
+  },
+  postsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: responsiveScreenWidth(5),
+    // justifyContent: 'space-evenly',
+  },
+  postContainer: {
+    width: screenWidth / 2.5, // Adjust width to fit grid
+    margin: responsiveScreenWidth(1),
+  },
+  postImage: {
+    width: '100%', // Full width of post container
+    height: screenWidth / 2.2, // Square ratio
+    borderRadius: 10,
+    resizeMode: 'cover',
+  },
+  loginText: {
+    fontSize: 18,
+    fontFamily: 'Poppins-Medium',
+    color: 'white',
+  },
 });
+
+export default ProfileScreen;

@@ -1,430 +1,161 @@
+import React, {useState, useContext} from 'react';
 import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Alert,
+  FlatList,
+  Dimensions,
 } from 'react-native';
-import React, {useState} from 'react';
-import {Header} from 'react-native/Libraries/NewAppScreen';
-import HeaderSearch from '../../components/HeaderSearch';
-import {
-  responsiveScreenHeight,
-  responsiveScreenWidth,
-} from 'react-native-responsive-dimensions';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {PostsContext} from '../../PostsContext'; // Import the context
+import Headers from '../../components/Headers';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 
-const AddScreen = () => {
-  const [quiz, setQuiz] = useState('upcoming');
+const {width: screenWidth} = Dimensions.get('window');
+
+const AddScreen = ({navigation}) => {
+  const [title, setTitle] = useState(''); // Add state for title
+  const [description, setDescription] = useState('');
+  const [images, setImages] = useState([]); // Store multiple images
+  const [activeSlide, setActiveSlide] = useState(0); // For pagination
+  const {addPost, user} = useContext(PostsContext); // Access the addPost function from context
+
+  const handleChoosePhoto = async () => {
+    const options = {
+      mediaType: 'photo',
+      noData: true,
+      selectionLimit: 0, // 0 allows multiple selection
+    };
+
+    try {
+      const result = await launchImageLibrary(options);
+
+      if (result?.assets && result.assets.length > 0) {
+        setImages(result.assets); // Store selected images in an array
+      }
+    } catch (error) {
+      console.error('Error picking image: ', error);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (title && description && images.length > 0) {
+      const newPost = {
+        id: Date.now(),
+        userName: user?.userName,
+        profilePic: user?.profilePic,
+        postImages: images, // Store multiple images
+        title,
+        description,
+        isNew: true, // Mark this post as new
+      };
+
+      addPost(newPost); // Add the post using the context
+      navigation.navigate('HomeScreen'); // Navigate back to HomeScreen
+    } else {
+      Alert.alert('Please fill in all fields and choose an image.');
+    }
+  };
+
+  const renderImage = ({item}) => (
+    <Image source={{uri: item.uri}} style={styles.carouselImage} />
+  );
+
   return (
-    <View style={styles.mainContainer}>
-      <HeaderSearch headingText={'Upcomming Quizzes'} />
-      <View
-        style={{
-          width: '90%',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          alignSelf: 'center',
-          marginTop: responsiveScreenHeight(2),
-        }}>
-        <View style={{width: '30%', alignItems: 'center'}}>
-          <TouchableOpacity onPress={() => setQuiz('upcoming')}>
-            <Text
-              style={{
-                fontFamily: 'Poppins-Medium',
-                fontSize: 16,
-                color: quiz === 'upcoming' ? '#F5BE00' : '#A6A3A3',
-              }}>
-              UPCOMING
-            </Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              backgroundColor: quiz === 'upcoming' ? '#F5BE00' : 'white',
-              width: '100%',
-              height: responsiveScreenHeight(1),
-              borderRadius: 10,
-            }}></View>
-        </View>
-        <View style={{width: '30%', alignItems: 'center'}}>
-          <TouchableOpacity onPress={() => setQuiz('active')}>
-            <Text
-              style={{
-                fontFamily: 'Poppins-Medium',
-                fontSize: 16,
-                color: quiz === 'active' ? '#F5BE00' : '#A6A3A3',
-              }}>
-              ACTIVE
-            </Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              backgroundColor: quiz === 'active' ? '#F5BE00' : 'white',
-              width: '100%',
-              height: responsiveScreenHeight(1),
-              borderRadius: 10,
-            }}></View>
-        </View>
-        <View style={{width: '30%', alignItems: 'center'}}>
-          <TouchableOpacity onPress={() => setQuiz('completed')}>
-            <Text
-              style={{
-                fontFamily: 'Poppins-Medium',
-                fontSize: 16,
-                color: quiz === 'completed' ? '#F5BE00' : '#A6A3A3',
-              }}>
-              COMPLETED
-            </Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              backgroundColor: quiz === 'completed' ? '#F5BE00' : 'white',
-              width: '100%',
-              height: responsiveScreenHeight(1),
-              borderRadius: 10,
-            }}></View>
-        </View>
-      </View>
-      {quiz === 'upcoming' ? (
-        <ScrollView>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '90%',
-              alignSelf: 'center',
-              marginTop: responsiveScreenHeight(2),
-              borderRadius: 10, // Rounded corners
-              borderWidth: 0.5,
-              borderColor: '#ccc', // Border color
-              // iOS shadow
-              shadowColor: '#000',
-              // shadowOffset: {width: 0, height: 2},
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              // Android shadow
-              elevation: 4,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                // alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: responsiveScreenWidth(4),
-                paddingVertical: responsiveScreenHeight(2),
-              }}>
-              <View
-                style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-                <View>
-                  <Image source={require('../../assets/Images/devices.png')} />
-                </View>
-                <View>
-                  <Text style={styles.headerText}>Quiz Name</Text>
-                  <Text style={styles.subHeaderText}>Category</Text>
-                </View>
-              </View>
-              <View>
-                <Text style={styles.headerText}>Date</Text>
-                <Text style={styles.subHeaderText}>Time</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingHorizontal: responsiveScreenWidth(4),
-                gap: 10,
-                paddingBottom: responsiveScreenHeight(2),
-              }}>
-              <Image source={require('../../assets/Images/gift.png')} />
-              <Text style={styles.subHeaderText}>
-                Surprise for top 3 Winners
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '90%',
-              alignSelf: 'center',
-              marginTop: responsiveScreenHeight(2),
-              borderRadius: 10, // Rounded corners
-              borderWidth: 0.5,
-              borderColor: '#ccc', // Border color
-              // iOS shadow
-              shadowColor: '#000',
-              // shadowOffset: {width: 0, height: 2},
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              // Android shadow
-              elevation: 4,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                // alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: responsiveScreenWidth(4),
-                paddingVertical: responsiveScreenHeight(2),
-              }}>
-              <View
-                style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-                <View>
-                  <Image source={require('../../assets/Images/devices.png')} />
-                </View>
-                <View>
-                  <Text style={styles.headerText}>Quiz Name</Text>
-                  <Text style={styles.subHeaderText}>Category</Text>
-                </View>
-              </View>
-              <View>
-                <Text style={styles.headerText}>Date</Text>
-                <Text style={styles.subHeaderText}>Time</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingHorizontal: responsiveScreenWidth(4),
-                gap: 10,
-                paddingBottom: responsiveScreenHeight(2),
-              }}>
-              <Image source={require('../../assets/Images/gift.png')} />
-              <Text style={styles.subHeaderText}>
-                Surprise for top 3 Winners
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '90%',
-              alignSelf: 'center',
-              marginTop: responsiveScreenHeight(2),
-              borderRadius: 10, // Rounded corners
-              borderWidth: 0.5,
-              borderColor: '#ccc', // Border color
-              // iOS shadow
-              shadowColor: '#000',
-              // shadowOffset: {width: 0, height: 2},
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              // Android shadow
-              elevation: 4,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                // alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: responsiveScreenWidth(4),
-                paddingVertical: responsiveScreenHeight(2),
-              }}>
-              <View
-                style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-                <View>
-                  <Image source={require('../../assets/Images/devices.png')} />
-                </View>
-                <View>
-                  <Text style={styles.headerText}>Quiz Name</Text>
-                  <Text style={styles.subHeaderText}>Category</Text>
-                </View>
-              </View>
-              <View>
-                <Text style={styles.headerText}>Date</Text>
-                <Text style={styles.subHeaderText}>Time</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingHorizontal: responsiveScreenWidth(4),
-                gap: 10,
-                paddingBottom: responsiveScreenHeight(2),
-              }}>
-              <Image source={require('../../assets/Images/gift.png')} />
-              <Text style={styles.subHeaderText}>
-                Surprise for top 3 Winners
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '90%',
-              alignSelf: 'center',
-              marginTop: responsiveScreenHeight(2),
-              borderRadius: 10, // Rounded corners
-              borderWidth: 0.5,
-              borderColor: '#ccc', // Border color
-              // iOS shadow
-              shadowColor: '#000',
-              // shadowOffset: {width: 0, height: 2},
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              // Android shadow
-              elevation: 4,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                // alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: responsiveScreenWidth(4),
-                paddingVertical: responsiveScreenHeight(2),
-              }}>
-              <View
-                style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-                <View>
-                  <Image source={require('../../assets/Images/devices.png')} />
-                </View>
-                <View>
-                  <Text style={styles.headerText}>Quiz Name</Text>
-                  <Text style={styles.subHeaderText}>Category</Text>
-                </View>
-              </View>
-              <View>
-                <Text style={styles.headerText}>Date</Text>
-                <Text style={styles.subHeaderText}>Time</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingHorizontal: responsiveScreenWidth(4),
-                gap: 10,
-                paddingBottom: responsiveScreenHeight(2),
-              }}>
-              <Image source={require('../../assets/Images/gift.png')} />
-              <Text style={styles.subHeaderText}>
-                Surprise for top 3 Winners
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '90%',
-              alignSelf: 'center',
-              marginTop: responsiveScreenHeight(2),
-              marginBottom: responsiveScreenHeight(2),
-              borderRadius: 10, // Rounded corners
-              borderWidth: 0.5,
-              borderColor: '#ccc', // Border color
-              // iOS shadow
-              shadowColor: '#000',
-              // shadowOffset: {width: 0, height: 2},
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              // Android shadow
-              elevation: 4,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                // alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: responsiveScreenWidth(4),
-                paddingVertical: responsiveScreenHeight(2),
-              }}>
-              <View
-                style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-                <View>
-                  <Image source={require('../../assets/Images/devices.png')} />
-                </View>
-                <View>
-                  <Text style={styles.headerText}>Quiz Name</Text>
-                  <Text style={styles.subHeaderText}>Category</Text>
-                </View>
-              </View>
-              <View>
-                <Text style={styles.headerText}>Date</Text>
-                <Text style={styles.subHeaderText}>Time</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingHorizontal: responsiveScreenWidth(4),
-                gap: 10,
-                paddingBottom: responsiveScreenHeight(2),
-              }}>
-              <Image source={require('../../assets/Images/gift.png')} />
-              <Text style={styles.subHeaderText}>
-                Surprise for top 3 Winners
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
-      ) : quiz === 'active' ? (
+    <View style={styles.container}>
+      <Headers quiz quizText={'Add Post'} />
+      {images.length > 0 && (
         <View>
-          <View
-            style={{marginTop: responsiveScreenHeight(4), alignSelf: 'center'}}>
-            <Image source={require('../../assets/Images/QuizPic.png')} />
-          </View>
-          <View
-            style={{
-              paddingHorizontal: responsiveScreenWidth(3),
-              marginTop: responsiveScreenHeight(2),
-            }}>
-            <Text
-              style={{
-                color: '#043142',
-                fontSize: 22,
-                fontFamily: 'Poppins-Bold',
-                textAlign: 'center',
-              }}>
-              No Upcomming Quizes
-            </Text>
-            <Text
-              style={{
-                color: '#999999',
-                fontSize: 18,
-                fontFamily: 'Poppins-Medium',
-                textAlign: 'center',
-              }}>
-              You're all set for now! No quizzes are scheduled. Keep exploring
-              and stay sharp!
-            </Text>
-          </View>
-          <TouchableOpacity
-            style={{
-              width: '90%',
-              backgroundColor: '#043142',
-              paddingVertical: 15,
-              alignSelf: 'center',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 20,
-              marginTop: responsiveScreenHeight(5),
-            }}>
-            <Text style={styles.loginText}>Explore Content</Text>
-          </TouchableOpacity>
+          <Carousel
+            data={images}
+            renderItem={renderImage}
+            sliderWidth={screenWidth}
+            itemWidth={screenWidth * 0.8}
+            onSnapToItem={index => setActiveSlide(index)}
+          />
+          <Pagination
+            dotsLength={images.length}
+            activeDotIndex={activeSlide}
+            containerStyle={{paddingVertical: 8}}
+            dotStyle={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              marginHorizontal: 2,
+              backgroundColor: 'rgba(0, 0, 0, 0.92)',
+            }}
+            inactiveDotStyle={{
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.6}
+          />
         </View>
-      ) : null}
+      )}
+      <TouchableOpacity style={styles.button} onPress={handleChoosePhoto}>
+        <Text style={styles.buttonText}>Choose Photos</Text>
+      </TouchableOpacity>
+      <TextInput
+        style={styles.input}
+        placeholder="Title"
+        value={title}
+        onChangeText={setTitle}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Description"
+        value={description}
+        onChangeText={setDescription}
+        multiline
+      />
+      {/* Show Carousel if images are selected */}
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Create Post</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
-export default AddScreen;
-
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
+  container: {
     backgroundColor: 'white',
+    flex: 1,
   },
-  headerText: {
-    fontSize: 18,
-    fontFamily: 'Poppins-Bold',
-    color: '#043142',
-  },
-  subHeaderText: {
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
     fontSize: 16,
-    fontFamily: 'Poppins-Medium',
-    color: '#777777',
+    width: '80%',
+    alignSelf: 'center',
   },
-  loginText: {
-    fontSize: 20,
-    fontFamily: 'Poppins-Bold',
-    color: 'white',
+  button: {
+    backgroundColor: '#F5BE00',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 15,
+    width: '80%',
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  carouselImage: {
+    width: screenWidth * 0.8,
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 10,
   },
 });
+
+export default AddScreen;
