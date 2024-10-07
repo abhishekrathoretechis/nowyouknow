@@ -1,79 +1,78 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+This is a simple social media app built using React Native. The app demonstrates core mobile development principles such as managing user data, adding posts, editing user profiles, and rendering dynamic content. The app consists of four main screens:
 
-# Getting Started
+HomeScreen - Displays posts and allows users to interact with them (e.g., liking and commenting).
+ProfileScreen - Shows the user's profile details and uploaded posts.
+AddScreen - Allows users to add new posts to the app.
+EditProfileScreen - Lets users edit their profile details, such as the name, bio, and profile picture.
+Installation
+To get started, follow these steps:
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+Clone the repository:
 
-## Step 1: Start the Metro Server
+Install dependencies:
+npm install
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+Run the app:
 
-To start Metro, run the following command from the _root_ of your React Native project:
+npx react-native run-android # for Android
+npx react-native run-ios # for iOS
 
-```bash
-# using npm
-npm start
+Screens Overview
 
-# OR using Yarn
-yarn start
-```
+1. HomeScreen
+   The HomeScreen displays all the posts added by users. Each post includes a profile picture, username, post images, title, and description. Users can like posts, comment on them, or share them.
 
-## Step 2: Start your Application
+Key Features:
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+FlatList: Used to render the posts dynamically.
+Carousel: Allows users to swipe through multiple images for a post.
+Like and Comment: Users can like or comment on posts.
+Post Date: Displays the date when the post was created. For existing posts, the date is fixed. For new posts, the current date is shown.
+Important Logic:
 
-### For Android
+The toggleLike() function manages the "liked" state of posts.
+The date for new posts is formatted as DD/MM/YYYY using new Date().toLocaleDateString('en-GB'). 2. ProfileScreen
+The ProfileScreen displays the user's profile details, including the profile picture, username, bio, number of followers, and number of posts. It also shows a grid of uploaded posts. If a post contains more than one image, only the first image is displayed on the profile.
 
-```bash
-# using npm
-npm run android
+Key Features:
 
-# OR using Yarn
-yarn android
-```
+Displays a minimalistic profile page with basic user details.
+Uses a grid layout to display posts uploaded by the user.
+Renders the first image of each post in the grid for posts with multiple images.
+Important Logic:
 
-### For iOS
+The ProfileScreen fetches the user's details from the PostsContext and shows their profile picture, bio, and posts.
+The posts displayed are linked to the specific user. 3. AddScreen
+The AddScreen allows users to create and upload a new post. The user can select multiple images for the post, add a title, and provide a description. Upon submission, the new post is added to the list of posts in the HomeScreen.
 
-```bash
-# using npm
-npm run ios
+Key Features:
 
-# OR using Yarn
-yarn ios
-```
+Allows users to upload multiple images for a post.
+Users can add a title and description for each post.
+The post is automatically linked to the logged-in user's profile picture and username.
+Important Logic:
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+The addPost() function in the PostsContext adds a new post to the existing list of posts.
+The current date is added to the post when it is created, and the post appears in the HomeScreen with the correct user information. 4. EditProfileScreen
+The EditProfileScreen allows users to edit their profile details, such as the name, bio, and profile picture. The updated information is then reflected across the app, including in the ProfileScreen and HomeScreen for new posts.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+Key Features:
 
-## Step 3: Modifying your App
+Users can change their profile picture, username, and bio.
+Once edited, the new profile information is applied to future posts and displayed in the profile section.
+Important Logic:
 
-Now that you have successfully run the app, let's modify it.
+The updateUser() function in the PostsContext is used to update the user's profile information.
+The changes are reflected immediately in the ProfileScreen and in any new posts created after the update.
+Context Management
+The app uses PostsContext to manage the state of posts and user data throughout the app. Here's a brief explanation of the main context functions:
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+posts: Stores the array of posts.
+addPost(newPost): Adds a new post to the posts array. It associates the post with the current user’s profile picture and username.
+user: Stores the logged-in user's profile data, including userName, bio, and profilePic.
+updateUser(updatedUser): Updates the user's profile information.
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+Conclusion
+This app demonstrates how to build a functional social media interface using React Native. It includes key functionalities like creating posts, editing user profiles, and rendering posts in a dynamic and responsive way. The app efficiently manages state using context (PostsContext) and keeps the user experience smooth and intuitive.
 
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Feel free to modify and extend the app to include more features such as comments, post reactions, and advanced user settings!
